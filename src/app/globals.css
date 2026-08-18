@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+:root {
+  --color-ink: #1b2a22;
+  --color-paper: #efead9;
+  --color-paper-line: #d8d1b8;
+  --color-brand: #2f5233;
+  --color-brand-dark: #23401f;
+  --color-income: #2f6b4f;
+  --color-expense: #b3452a;
+
+  --font-display: "Fraunces", serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+@layer components {
+  .input {
+    @apply w-full rounded-sm border px-3 py-2 bg-[#F8F5EA] text-[#1B2A22] placeholder:text-[#8A8367] focus:outline-none focus:ring-2 focus:ring-[#2F5233];
+    border-color: var(--color-paper-line);
+  }
+
+  .btn-primary {
+    @apply w-full rounded-sm py-2.5 text-[#EFEAD9] font-medium transition-colors disabled:opacity-50;
+    background-color: var(--color-brand);
+  }
+  .btn-primary:hover:not(:disabled) {
+    background-color: var(--color-brand-dark);
+  }
+
+  .card {
+    @apply rounded-sm border p-4;
+    border-color: var(--color-paper-line);
+    background-color: #f8f5ea;
+  }
+
+  .ledger-row {
+    @apply flex items-center justify-between py-3;
+    border-bottom: 1px dashed var(--color-paper-line);
+  }
+}
