@@ -1,6 +1,7 @@
 "use client";
 
 import { deleteTransaction } from "./actions";
+import Link from "next/link";
 
 type Transaction = {
   id: string;
@@ -53,6 +54,12 @@ export default function TransactionList({
               {t.type === "income" ? "+" : "-"}
               {Number(t.amount).toLocaleString("vi-VN")}đ
             </p>
+            <Link
+              href={`/dashboard/transactions/${t.id}/edit`}
+              className="text-xs underline text-[#5C5940]"
+            >
+              Sửa
+            </Link>
             <button
               onClick={() => handleDelete(t.id)}
               className="text-xs text-[#8A8367] underline hover:text-[#B3452A]"

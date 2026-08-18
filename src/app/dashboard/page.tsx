@@ -1,10 +1,12 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import TransactionForm from "./TransactionForm";
 import TransactionList from "./TransactionList";
 import CategoryChart from "./CategoryChart";
 import TrendChart from "./TrendChart";
-import Link from "next/link";
+import DashboardTabs from "./DashboardTabs";
+import LogoutButton from "./LogoutButton";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -70,12 +72,15 @@ export default async function DashboardPage() {
         </p>
         <div className="flex items-center justify-between">
           <h1 className="font-display text-xl text-[#EFEAD9]">{user.email}</h1>
-          <Link
-            href="/dashboard/categories"
-            className="text-sm text-[#C9D9C4] underline"
-          >
-            Quản lý danh mục
-          </Link>
+          <div className="flex gap-3">
+            <Link
+              href="/dashboard/categories"
+              className="text-sm text-[#C9D9C4] underline"
+            >
+              Danh mục
+            </Link>
+            <LogoutButton />
+          </div>
         </div>
       </div>
 
@@ -105,14 +110,26 @@ export default async function DashboardPage() {
           </p>
         </div>
       </div>
-      <TrendChart data={trendChartData} />
-      <CategoryChart data={categoryChartData} />
-      <TransactionForm categories={categories ?? []} />
 
-      <div>
-        <h2 className="font-display mb-2 font-semibold">Lịch sử giao dịch</h2>
-        <TransactionList transactions={transactions ?? []} />
-      </div>
+      <DashboardTabs
+        transactionsContent={
+          <div className="space-y-6">
+            <TransactionForm categories={categories ?? []} />
+            <div>
+              <h2 className="font-display mb-2 font-semibold">
+                Lịch sử giao dịch
+              </h2>
+              <TransactionList transactions={transactions ?? []} />
+            </div>
+          </div>
+        }
+        statsContent={
+          <div className="space-y-6">
+            <TrendChart data={trendChartData} />
+            <CategoryChart data={categoryChartData} />
+          </div>
+        }
+      />
     </div>
   );
 }

@@ -9,20 +9,29 @@ type Category = {
   type: string;
 };
 
+function formatNumber(value: string) {
+  const digits = value.replace(/\D/g, "");
+  if (!digits) return "";
+  return Number(digits).toLocaleString("en-US");
+}
+
 export default function TransactionForm({
   categories,
 }: {
   categories: Category[];
 }) {
   const [type, setType] = useState("expense");
+  const [amountDisplay, setAmountDisplay] = useState("");
   const [loading, setLoading] = useState(false);
 
   const filteredCategories = categories.filter((c) => c.type === type);
+  const rawAmount = amountDisplay.replace(/,/g, "");
 
   async function handleSubmit(formData: FormData) {
     setLoading(true);
     await addTransaction(formData);
     setLoading(false);
+    setAmountDisplay("");
     (document.getElementById("txn-form") as HTMLFormElement)?.reset();
   }
 
@@ -56,14 +65,15 @@ export default function TransactionForm({
       </div>
 
       <input
-        type="number"
-        name="amount"
+        type="text"
+        inputMode="numeric"
         placeholder="Số tiền"
+        value={amountDisplay}
+        onChange={(e) => setAmountDisplay(formatNumber(e.target.value))}
         required
-        min="0"
-        step="1000"
         className="input font-mono"
       />
+      <input type="hidden" name="amount" value={rawAmount} />
 
       <select name="category_id" className="input">
         <option value="">-- Chọn danh mục --</option>

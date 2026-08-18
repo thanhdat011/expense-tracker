@@ -39,3 +39,32 @@ export async function deleteTransaction(id: string) {
 
   revalidatePath("/dashboard");
 }
+export async function updateTransaction(id: string, formData: FormData) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) throw new Error("Chưa đăng nhập");
+
+  const amount = formData.get("amount") as string;
+  const type = formData.get("type") as string;
+  const categoryId = formData.get("category_id") as string;
+  const txnDate = formData.get("txn_date") as string;
+  const note = formData.get("note") as string;
+
+  const { error } = await supabase
+    .from("transactions")
+    .update({
+      amount: parseFloat(amount),
+      type,
+      category_id: categoryId || null,
+      txn_date: txnDate,
+      note: note || null,
+    })
+    .eq("id", id)
+    .eq("user_id", user.id);
+
+  if (error) throw new Error(error.message);
+
+  revalidatePath("/dashboard");
+}
