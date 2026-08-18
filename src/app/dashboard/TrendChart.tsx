@@ -30,7 +30,7 @@ export default function TrendChart({ data }: { data: TrendData[] }) {
           <XAxis dataKey="month" tick={{ fontSize: 12, fill: "#5C5940" }} />
           <YAxis tick={{ fontSize: 12, fill: "#5C5940" }} />
           <Tooltip
-            formatter={(value: number) => `${value.toLocaleString("vi-VN")}đ`}
+            formatter={(value) => `${Number(value).toLocaleString("vi-VN")}đ`}
           />
           <Bar
             dataKey="income"

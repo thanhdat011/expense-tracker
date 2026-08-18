@@ -46,7 +46,7 @@ export default function CategoryChart({ data }: { data: ChartData[] }) {
             ))}
           </Pie>
           <Tooltip
-            formatter={(value: number) => `${value.toLocaleString("vi-VN")}đ`}
+            formatter={(value) => `${Number(value).toLocaleString("vi-VN")}đ`}
             contentStyle={{ fontFamily: "var(--font-body)", fontSize: 13 }}
           />
         </PieChart>
