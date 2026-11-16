@@ -26,13 +26,17 @@ export default async function EditTransactionPage({
     .from("categories")
     .select("*")
     .order("name");
-
+  const { data: accounts } = await supabase
+    .from("accounts")
+    .select("id, name")
+    .order("created_at");
   return (
     <div className="mx-auto max-w-2xl space-y-6 p-6">
       <h1 className="font-display text-xl font-semibold">Sửa giao dịch</h1>
       <EditTransactionForm
         transaction={transaction}
         categories={categories ?? []}
+        accounts={accounts ?? []}
       />
     </div>
   );

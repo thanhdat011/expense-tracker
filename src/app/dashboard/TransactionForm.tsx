@@ -8,6 +8,7 @@ type Category = {
   name: string;
   type: string;
 };
+type Account = { id: string; name: string };
 
 function formatNumber(value: string) {
   const digits = value.replace(/\D/g, "");
@@ -17,8 +18,10 @@ function formatNumber(value: string) {
 
 export default function TransactionForm({
   categories,
+  accounts,
 }: {
   categories: Category[];
+  accounts: Account[];
 }) {
   const [type, setType] = useState("expense");
   const [amountDisplay, setAmountDisplay] = useState("");
@@ -74,6 +77,14 @@ export default function TransactionForm({
         className="input font-mono"
       />
       <input type="hidden" name="amount" value={rawAmount} />
+
+      <select name="account_id" required className="input">
+        {accounts.map((a) => (
+          <option key={a.id} value={a.id}>
+            {a.name}
+          </option>
+        ))}
+      </select>
 
       <select name="category_id" className="input">
         <option value="">-- Chọn danh mục --</option>

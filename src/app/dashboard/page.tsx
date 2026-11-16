@@ -25,7 +25,7 @@ export default async function DashboardPage() {
 
   const { data: transactions } = await supabase
     .from("transactions")
-    .select("*, categories(name)")
+    .select("*, categories(name), accounts(name)")
     .order("txn_date", { ascending: false });
 
   const totalIncome =
@@ -61,6 +61,21 @@ export default async function DashboardPage() {
   const trendChartData = Object.entries(trendMap)
     .map(([month, v]) => ({ month, ...v }))
     .slice(-6);
+
+  const { data: accounts } = await supabase
+    .from("accounts")
+    .select("*")
+    .order("created_at");
+
+  const accountBalances = (accounts ?? []).map((a) => {
+    const income = (transactions ?? [])
+      .filter((t) => t.account_id === a.id && t.type === "income")
+      .reduce((s, t) => s + Number(t.amount), 0);
+    const expense = (transactions ?? [])
+      .filter((t) => t.account_id === a.id && t.type === "expense")
+      .reduce((s, t) => s + Number(t.amount), 0);
+    return { ...a, balance: Number(a.initial_balance) + income - expense };
+  });
   return (
     <div className="mx-auto max-w-2xl space-y-6 p-6">
       <div
@@ -73,6 +88,12 @@ export default async function DashboardPage() {
         <div className="flex items-center justify-between">
           <h1 className="font-display text-xl text-[#EFEAD9]">{user.email}</h1>
           <div className="flex gap-3">
+            <Link
+              href="/dashboard/accounts"
+              className="text-sm text-[#C9D9C4] underline"
+            >
+              Ví
+            </Link>
             <Link
               href="/dashboard/categories"
               className="text-sm text-[#C9D9C4] underline"
@@ -110,11 +131,24 @@ export default async function DashboardPage() {
           </p>
         </div>
       </div>
+      <div className="grid grid-cols-3 gap-3 text-center">
+        {accountBalances.map((a) => (
+          <div key={a.id} className="card">
+            <p className="text-xs text-[#8A8367]">{a.name}</p>
+            <p className="font-mono text-sm font-semibold">
+              {a.balance.toLocaleString("vi-VN")}đ
+            </p>
+          </div>
+        ))}
+      </div>
 
       <DashboardTabs
         transactionsContent={
           <div className="space-y-6">
-            <TransactionForm categories={categories ?? []} />
+            <TransactionForm
+              categories={categories ?? []}
+              accounts={accounts ?? []}
+            />
             <div>
               <h2 className="font-display mb-2 font-semibold">
                 Lịch sử giao dịch

@@ -10,6 +10,7 @@ type Transaction = {
   txn_date: string;
   note: string | null;
   categories: { name: string } | null;
+  accounts: { name: string } | null;
 };
 
 export default function TransactionList({
@@ -39,6 +40,7 @@ export default function TransactionList({
               {new Date(t.txn_date).toLocaleDateString("vi-VN")}
               {t.categories && ` · ${t.categories.name}`}
               {t.note && ` · ${t.note}`}
+              {t.accounts && ` · ${t.accounts.name}`}
             </p>
           </div>
           <div className="flex items-center gap-3">

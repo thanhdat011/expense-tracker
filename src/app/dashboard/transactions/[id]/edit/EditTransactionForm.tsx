@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { updateTransaction } from "../../../actions";
 
 type Category = { id: string; name: string; type: string };
+type Account = { id: string; name: string };
 type Transaction = {
   id: string;
   amount: number;
@@ -12,6 +13,7 @@ type Transaction = {
   category_id: string | null;
   txn_date: string;
   note: string | null;
+  account_id: string | null;
 };
 function formatNumber(value: string) {
   const digits = value.replace(/\D/g, "");
@@ -22,9 +24,11 @@ function formatNumber(value: string) {
 export default function EditTransactionForm({
   transaction,
   categories,
+  accounts,
 }: {
   transaction: Transaction;
   categories: Category[];
+  accounts: Account[];
 }) {
   const [type, setType] = useState(transaction.type);
   const [loading, setLoading] = useState(false);
@@ -78,6 +82,19 @@ export default function EditTransactionForm({
         className="input font-mono"
       />
       <input type="hidden" name="amount" value={rawAmount} />
+
+      <select
+        name="account_id"
+        defaultValue={transaction.account_id ?? ""}
+        required
+        className="input"
+      >
+        {accounts.map((a) => (
+          <option key={a.id} value={a.id}>
+            {a.name}
+          </option>
+        ))}
+      </select>
 
       <select
         name="category_id"
