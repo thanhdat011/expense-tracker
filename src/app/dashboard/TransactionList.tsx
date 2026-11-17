@@ -34,18 +34,18 @@ export default function TransactionList({
   return (
     <div className="card divide-y-0">
       {transactions.map((t) => (
-        <div key={t.id} className="ledger-row">
-          <div>
-            <p className="text-sm text-[#5C5940]">
+        <div key={t.id} className="ledger-row gap-3">
+          <div className="min-w-0 flex-1">
+            <p className="text-sm break-words text-[#5C5940]">
               {new Date(t.txn_date).toLocaleDateString("vi-VN")}
               {t.categories && ` · ${t.categories.name}`}
-              {t.note && ` · ${t.note}`}
               {t.accounts && ` · ${t.accounts.name}`}
+              {t.note && ` · ${t.note}`}
             </p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex shrink-0 flex-col items-end gap-1">
             <p
-              className="font-mono font-semibold"
+              className="font-mono text-sm font-semibold sm:text-base"
               style={{
                 color:
                   t.type === "income"
@@ -56,18 +56,20 @@ export default function TransactionList({
               {t.type === "income" ? "+" : "-"}
               {Number(t.amount).toLocaleString("vi-VN")}đ
             </p>
-            <Link
-              href={`/dashboard/transactions/${t.id}/edit`}
-              className="text-xs underline text-[#5C5940]"
-            >
-              Sửa
-            </Link>
-            <button
-              onClick={() => handleDelete(t.id)}
-              className="text-xs text-[#8A8367] underline hover:text-[#B3452A]"
-            >
-              Xóa
-            </button>
+            <div className="flex gap-3">
+              <Link
+                href={`/dashboard/transactions/${t.id}/edit`}
+                className="text-xs underline text-[#5C5940]"
+              >
+                Sửa
+              </Link>
+              <button
+                onClick={() => handleDelete(t.id)}
+                className="text-xs text-[#8A8367] underline hover:text-[#B3452A]"
+              >
+                Xóa
+              </button>
+            </div>
           </div>
         </div>
       ))}

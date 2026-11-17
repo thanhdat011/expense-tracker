@@ -7,6 +7,7 @@ import CategoryChart from "./CategoryChart";
 import TrendChart from "./TrendChart";
 import DashboardTabs from "./DashboardTabs";
 import LogoutButton from "./LogoutButton";
+import { formatMoneyShort, formatMoneyFull } from "@/lib/format";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -86,8 +87,10 @@ export default async function DashboardPage() {
           Sổ Thu Chi
         </p>
         <div className="flex items-center justify-between">
-          <h1 className="font-display text-xl text-[#EFEAD9]">{user.email}</h1>
-          <div className="flex gap-3">
+          <h1 className="font-display text-xl text-[#EFEAD9]  min-w-0 truncate">
+            {user.email}
+          </h1>
+          <div className="flex gap-3 shrink-0 whitespace-nowrap">
             <Link
               href="/dashboard/accounts"
               className="text-sm text-[#C9D9C4] underline"
@@ -109,34 +112,42 @@ export default async function DashboardPage() {
         <div className="card">
           <p className="text-xs text-[#8A8367]">Thu</p>
           <p
-            className="font-mono font-semibold"
+            className="font-mono text-sm font-semibold break-words sm:text-base"
             style={{ color: "var(--color-income)" }}
+            title={formatMoneyFull(totalIncome)}
           >
-            {totalIncome.toLocaleString("vi-VN")}đ
+            {formatMoneyShort(totalIncome)}
           </p>
         </div>
-        <div className="card">
+        <div className="card min-w-0">
           <p className="text-xs text-[#8A8367]">Chi</p>
           <p
-            className="font-mono font-semibold"
+            className="font-mono text-sm font-semibold break-words sm:text-base"
             style={{ color: "var(--color-expense)" }}
+            title={formatMoneyFull(totalExpense)}
           >
-            {totalExpense.toLocaleString("vi-VN")}đ
+            {formatMoneyShort(totalExpense)}
           </p>
         </div>
         <div className="card">
           <p className="text-xs text-[#8A8367]">Số dư</p>
-          <p className="font-mono font-semibold">
-            {(totalIncome - totalExpense).toLocaleString("vi-VN")}đ
+          <p
+            className="font-mono text-sm font-semibold break-words sm:text-base"
+            title={formatMoneyFull(totalIncome - totalExpense)}
+          >
+            {formatMoneyShort(totalIncome - totalExpense)}
           </p>
         </div>
       </div>
       <div className="grid grid-cols-3 gap-3 text-center">
         {accountBalances.map((a) => (
-          <div key={a.id} className="card">
-            <p className="text-xs text-[#8A8367]">{a.name}</p>
-            <p className="font-mono text-sm font-semibold">
-              {a.balance.toLocaleString("vi-VN")}đ
+          <div key={a.id} className="card min-w-0">
+            <p className="truncate text-xs text-[#8A8367]">{a.name}</p>
+            <p
+              className="font-mono text-sm font-semibold"
+              title={formatMoneyFull(a.balance)}
+            >
+              {formatMoneyShort(a.balance)}
             </p>
           </div>
         ))}
